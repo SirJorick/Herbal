@@ -1,13 +1,13 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-import csv
 import threading
 import requests
+import csv
 from PIL import Image, ImageTk
 import io
-import urllib.parse  # For URL encoding
+import urllib.parse
 from bs4 import BeautifulSoup
-import chardet  # For encoding detection
+import chardet
 import re
 
 # ---------------- Optional Selenium Imports ---------------- #
@@ -17,43 +17,123 @@ try:
 except ImportError:
     webdriver = None
 
-# ---------------- Splash Screen ---------------- #
-class SplashScreen(tk.Toplevel):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.title("Loading...")
-        self.overrideredirect(True)  # Remove window decorations
-        width, height = 300, 150
-        x = (self.winfo_screenwidth() // 2) - (width // 2)
-        y = (self.winfo_screenheight() // 2) - (height // 2)
-        self.geometry(f"{width}x{height}+{x}+{y}")
-        label = tk.Label(self, text="Loading, please wait...", font=("Helvetica", 14))
-        label.pack(expand=True, fill="both", padx=20, pady=20)
-        self.after(2000, self.destroy)
 
-# ---------------- Main Application ---------------- #
-class HerbApp:
+# ---------------- Suggestion Fetcher ---------------- #
+def get_google_suggestions(query):
+    url = "https://suggestqueries.google.com/complete/search?client=firefox&q=" + urllib.parse.quote(query)
+    try:
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            if len(data) > 1:
+                return data[1]
+    except Exception as e:
+        return []
+    return []
+
+
+# ---------------- AutocompleteEntry with Floating Toplevel and Modified Focus ---------------- #
+class AutocompleteEntry(tk.Entry):
+    def __init__(self, master, suggestion_fetcher, **kwargs):
+        super().__init__(master, **kwargs)
+        self.suggestion_fetcher = suggestion_fetcher
+        self.suggestions_window = None  # Toplevel window for suggestions
+        self.bind("<KeyRelease>", self.on_keyrelease)
+        self.bind("<FocusOut>", self.on_focus_out)
+        self.bind("<Return>", self.on_return)
+
+    def on_focus_out(self, event):
+        # Delay hiding suggestions to allow listbox click events to process.
+        self.after(100, self.hide_suggestions)
+
+    def on_return(self, event):
+        # If a suggestion is highlighted, select it.
+        if self.suggestions_window and self.suggestions_listbox.curselection():
+            index = self.suggestions_listbox.curselection()[0]
+            value = self.suggestions_listbox.get(index)
+            self.delete(0, tk.END)
+            self.insert(0, value)
+        self.hide_suggestions()
+        # Trigger the search event.
+        self.event_generate("<<SearchTriggered>>")
+
+    def on_keyrelease(self, event):
+        # Skip navigation keys.
+        if event.keysym in ("Return", "Up", "Down"):
+            return
+        text = self.get()
+        if text == "":
+            self.hide_suggestions()
+            return
+        suggestions = self.suggestion_fetcher(text)
+        if suggestions:
+            self.show_suggestions(suggestions)
+        else:
+            self.hide_suggestions()
+
+    def show_suggestions(self, suggestions):
+        if self.suggestions_window:
+            self.suggestions_window.destroy()
+        # Create a borderless Toplevel window that "floats" over the application.
+        self.suggestions_window = tk.Toplevel(self)
+        self.suggestions_window.wm_overrideredirect(True)
+        x = self.winfo_rootx()
+        y = self.winfo_rooty() + self.winfo_height()
+        self.suggestions_window.wm_geometry("+%d+%d" % (x, y))
+        self.suggestions_listbox = tk.Listbox(self.suggestions_window, height=min(6, len(suggestions)))
+        self.suggestions_listbox.pack()
+        # Bind the mouse click event on the listbox items.
+        self.suggestions_listbox.bind("<ButtonRelease-1>", self.on_listbox_select)
+        for s in suggestions:
+            self.suggestions_listbox.insert(tk.END, s)
+
+    def hide_suggestions(self):
+        if self.suggestions_window:
+            self.suggestions_window.destroy()
+            self.suggestions_window = None
+
+    def on_listbox_select(self, event):
+        if self.suggestions_listbox:
+            selection = self.suggestions_listbox.curselection()
+            if selection:
+                value = self.suggestions_listbox.get(selection[0])
+                self.delete(0, tk.END)
+                self.insert(0, value)
+                self.hide_suggestions()
+
+
+# ---------------- Main Application with Notebook ---------------- #
+class MainApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Herbal Medicine App")
-        # Enlarge the main window so the image pane is more spacious.
+        self.root.title("General Search and Herbs App")
         self.root.geometry("1500x900")
-        self.setup_ui()
-        self.herb_data = self.load_csv("herbal.csv")
-        self.populate_combobox()
-        self.log_event("Application started.")
 
-    def setup_ui(self):
-        # Top frame for combobox
-        top_frame = tk.Frame(self.root)
+        self.notebook = ttk.Notebook(root)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+
+        self.herb_tab = HerbTab(self.notebook)
+        self.general_tab = GeneralSearchTab(self.notebook)
+
+        self.notebook.add(self.herb_tab.frame, text="Herbs")
+        self.notebook.add(self.general_tab.frame, text="General Search")
+
+
+# ---------------- HerbTab (Existing Functionality) ---------------- #
+class HerbTab:
+    def __init__(self, parent):
+        self.frame = tk.Frame(parent)
+
+        # Top frame with herb selection
+        top_frame = tk.Frame(self.frame)
         top_frame.pack(side=tk.TOP, fill=tk.X, padx=5, pady=5)
         tk.Label(top_frame, text="Select Herb:", font=("Helvetica", 14)).pack(side=tk.LEFT, padx=5)
         self.herb_combo = ttk.Combobox(top_frame, state="readonly", font=("Helvetica", 14))
         self.herb_combo.pack(side=tk.LEFT, padx=5)
         self.herb_combo.bind("<<ComboboxSelected>>", self.on_herb_selected)
 
-        # Main frame split into details (left) and images (right)
-        main_frame = tk.Frame(self.root)
+        # Create main frame for details and images
+        main_frame = tk.Frame(self.frame)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         main_frame.columnconfigure(0, weight=1)
         main_frame.columnconfigure(1, weight=4)
@@ -73,18 +153,27 @@ class HerbApp:
         self.image_frame = tk.Frame(right_frame)
         self.image_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Footer console frame for event logs
-        console_frame = tk.Frame(self.root, bd=2, relief=tk.SUNKEN)
+        # Console at bottom -- now create it BEFORE loading CSV
+        console_frame = tk.Frame(self.frame, bd=2, relief=tk.SUNKEN)
         console_frame.pack(side=tk.BOTTOM, fill=tk.X)
-        self.console_text = tk.Text(console_frame, height=5, state='disabled', font=("Helvetica", 10))
+        self.console_text = tk.Text(console_frame, height=5, state="disabled", font=("Helvetica", 10))
         self.console_text.pack(fill=tk.X)
 
+        # Now load CSV after console_text is created
+        self.herb_data = self.load_csv("herbal.csv")
+        herbs = [row["name"] for row in self.herb_data]
+        self.herb_combo['values'] = herbs
+        if herbs:
+            self.herb_combo.current(0)
+
+        self.log_event("Herb tab loaded.")
+        self.on_herb_selected(None)
+
     def log_event(self, message):
-        """Append a message to the console text box."""
-        self.console_text.config(state='normal')
+        self.console_text.config(state="normal")
         self.console_text.insert(tk.END, message + "\n")
         self.console_text.see(tk.END)
-        self.console_text.config(state='disabled')
+        self.console_text.config(state="disabled")
 
     def load_csv(self, filename):
         data = []
@@ -102,29 +191,39 @@ class HerbApp:
             self.log_event(f"Error loading CSV file: {e}")
         return data
 
-    def populate_combobox(self):
-        herbs = [row["name"] for row in self.herb_data]
-        self.herb_combo['values'] = herbs
-        if herbs:
-            self.herb_combo.current(0)
-            self.on_herb_selected(None)
-            self.log_event("Herb combobox populated.")
-
-    def format_text(self, text):
-        """
-        Split text into sentences using punctuation and rejoin with newlines.
-        """
-        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
-        return "\n".join(sentence.strip() for sentence in sentences if sentence)
+    def fetch_html(self, url, headers, force_selenium=False):
+        if not force_selenium:
+            try:
+                resp = requests.get(url, headers=headers, timeout=10)
+                self.log_event(f"Requests GET {url} returned status code: {resp.status_code}")
+                if resp.status_code != 200 or "unusual traffic" in resp.text.lower():
+                    raise Exception("Blocked or CAPTCHA")
+                return resp.text
+            except Exception as e:
+                self.log_event(f"Requests failed for {url}: {e}. Trying Selenium fallback.")
+        if webdriver is None:
+            self.log_event("Selenium not installed.")
+            return ""
+        try:
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--disable-gpu")
+            chrome_options.add_argument("--no-sandbox")
+            driver = webdriver.Chrome(options=chrome_options)
+            driver.get(url)
+            html = driver.page_source
+            driver.quit()
+            return html
+        except Exception as se:
+            self.log_event("Selenium fallback failed: " + str(se))
+            return ""
 
     def on_herb_selected(self, event):
         herb_name = self.herb_combo.get()
         self.detail_text.delete("1.0", tk.END)
-        # Clear existing images
         for widget in self.image_frame.winfo_children():
             widget.destroy()
 
-        # Display CSV info and parts
         parts = ""
         details = f"Herb: {herb_name}\n"
         for row in self.herb_data:
@@ -135,31 +234,151 @@ class HerbApp:
         self.detail_text.insert(tk.END, details)
         self.log_event(f"Herb selected: {herb_name} (Parts: {parts})")
 
-        # Launch threads: DuckDuckGo for web details and Google for images.
-        threading.Thread(target=self.fetch_web_details_duckduckgo, args=(herb_name, parts), daemon=True).start()
-        threading.Thread(target=self.fetch_images_google, args=(herb_name, parts), daemon=True).start()
+        # Launch threads to fetch details and images (using herb name + parts)
+        threading.Thread(target=self.fetch_web_details_duckduckgo, args=(herb_name + " " + parts,), daemon=True).start()
+        threading.Thread(target=self.fetch_images_google, args=(herb_name + " " + parts,), daemon=True).start()
+
+    def fetch_web_details_duckduckgo(self, query):
+        query_str = query + " uses"
+        query_encoded = urllib.parse.quote(query_str)
+        url = "https://html.duckduckgo.com/html/?q=" + query_encoded
+        headers = {"User-Agent": "Mozilla/5.0"}
+        self.log_event(f"Fetching details from DuckDuckGo: {query_str}")
+        html = self.fetch_html(url, headers)
+        snippets = []
+        if html:
+            soup = BeautifulSoup(html, "html.parser")
+            for result in soup.find_all("div", class_="result"):
+                snippet = result.find("a", class_="result__snippet")
+                if snippet is None:
+                    snippet = result.find("div", class_="result__snippet")
+                if snippet:
+                    text = snippet.get_text().strip()
+                    if text and len(text.split()) > 5:
+                        snippets.append(text)
+                if len(snippets) >= 5:
+                    break
+        if snippets:
+            formatted = "\n\n".join(self.format_text(s) for s in snippets)
+            self.detail_text.insert(tk.END, "\n\nWeb Details (DuckDuckGo):\n" + formatted)
+            self.log_event("Web details fetched successfully.")
+        else:
+            self.detail_text.insert(tk.END, "\nNo additional web details found.")
+            self.log_event("No web details found.")
+
+    def fetch_images_google(self, query):
+        query_encoded = urllib.parse.quote(query)
+        url = "https://www.google.com/search?tbm=isch&q=" + query_encoded
+        headers = {"User-Agent": "Mozilla/5.0"}
+        self.log_event(f"Fetching images from Google for: {query}")
+        html = self.fetch_html(url, headers)
+        if not html:
+            self.log_event("Error fetching images.")
+            return
+        soup = BeautifulSoup(html, "html.parser")
+        img_urls = []
+        for tag in soup.find_all("img"):
+            img_url = tag.get("data-src") or tag.get("src")
+            if img_url and img_url.startswith("http") and img_url not in img_urls:
+                img_urls.append(img_url)
+            if len(img_urls) >= 9:
+                break
+        for widget in self.image_frame.winfo_children():
+            widget.destroy()
+        photos = []
+        for index, img_url in enumerate(img_urls):
+            try:
+                img_resp = requests.get(img_url, headers=headers, timeout=10)
+                image = Image.open(io.BytesIO(img_resp.content))
+                image = image.resize((175, 175))
+                photo = ImageTk.PhotoImage(image)
+                photos.append(photo)
+                container = tk.Frame(self.image_frame, bd=1, relief=tk.RAISED)
+                container.grid(row=index // 3, column=index % 3, padx=5, pady=5)
+                img_label = tk.Label(container, image=photo, cursor="hand2")
+                img_label.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+                caption = tk.Label(container, text=self.herb_combo.get(), font=("Helvetica", 12))
+                caption.pack(side=tk.BOTTOM, fill=tk.X)
+                img_label.bind("<Button-1>", lambda e, url=img_url: self.on_image_click(url))
+            except Exception as e:
+                self.log_event("Image error: " + str(e))
+        self.image_frame.photos = photos
+
+    def format_text(self, text):
+        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+        return "\n".join(sentence.strip() for sentence in sentences if sentence)
+
+    def on_image_click(self, url):
+        messagebox.showinfo("Image Details", f"Image URL:\n{url}")
+        self.log_event("Image clicked: " + url)
+
+
+# ---------------- GeneralSearchTab (New Functionality) ---------------- #
+class GeneralSearchTab:
+    def __init__(self, parent):
+        self.frame = tk.Frame(parent)
+        # Top search frame with auto-suggest entry
+        search_frame = tk.Frame(self.frame)
+        search_frame.pack(side=tk.TOP, fill=tk.X, padx=5, pady=5)
+        tk.Label(search_frame, text="Search:", font=("Helvetica", 14)).pack(side=tk.LEFT, padx=5)
+        self.search_entry = AutocompleteEntry(search_frame, get_google_suggestions, font=("Helvetica", 14))
+        self.search_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+        # Bind the custom event from AutocompleteEntry to trigger search on Enter.
+        self.search_entry.bind("<<SearchTriggered>>", lambda e: self.on_search())
+        self.search_button = tk.Button(search_frame, text="Search", font=("Helvetica", 14), command=self.on_search)
+        self.search_button.pack(side=tk.LEFT, padx=5)
+
+        # Main frame split into Details (left) and Images (right)
+        main_frame = tk.Frame(self.frame)
+        main_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        main_frame.columnconfigure(0, weight=1)
+        main_frame.columnconfigure(1, weight=4)
+        main_frame.rowconfigure(0, weight=1)
+
+        # Left panel for details
+        left_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
+        left_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+        self.detail_text = tk.Text(left_frame, wrap=tk.WORD, font=("Helvetica", 12))
+        self.detail_text.pack(fill=tk.BOTH, expand=True)
+
+        # Right panel for images
+        right_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
+        right_frame.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
+        right_frame.rowconfigure(0, weight=1)
+        right_frame.columnconfigure(0, weight=1)
+        self.image_frame = tk.Frame(right_frame)
+        self.image_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Console at bottom
+        console_frame = tk.Frame(self.frame, bd=2, relief=tk.SUNKEN)
+        console_frame.pack(side=tk.BOTTOM, fill=tk.X)
+        self.console_text = tk.Text(console_frame, height=5, state="disabled", font=("Helvetica", 10))
+        self.console_text.pack(fill=tk.X)
+
+    def log_event(self, message):
+        self.console_text.config(state="normal")
+        self.console_text.insert(tk.END, message + "\n")
+        self.console_text.see(tk.END)
+        self.console_text.config(state="disabled")
 
     def fetch_html(self, url, headers, force_selenium=False):
-        """
-        Fetch HTML using requests. If blocked or force_selenium is True, use Selenium.
-        """
         if not force_selenium:
             try:
                 resp = requests.get(url, headers=headers, timeout=10)
-                self.log_event(f"Requests GET {url} returned status code: {resp.status_code}")
+                self.log_event(f"Requests GET {url} returned {resp.status_code}")
                 if resp.status_code != 200 or "unusual traffic" in resp.text.lower():
-                    raise Exception("Blocked or CAPTCHA detected via requests.")
+                    raise Exception("Blocked or CAPTCHA")
                 return resp.text
             except Exception as e:
-                self.log_event(f"Requests failed for URL {url}: {e}. Trying Selenium fallback.")
+                self.log_event(f"Requests failed for {url}: {e}. Trying Selenium fallback.")
         if webdriver is None:
-            self.log_event("Selenium is not installed. Cannot use fallback.")
+            self.log_event("Selenium not installed.")
             return ""
         try:
             chrome_options = Options()
             chrome_options.add_argument("--headless")
-            chrome_options.add_argument('--disable-gpu')
-            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument("--disable-gpu")
+            chrome_options.add_argument("--no-sandbox")
             driver = webdriver.Chrome(options=chrome_options)
             driver.get(url)
             html = driver.page_source
@@ -169,128 +388,94 @@ class HerbApp:
             self.log_event("Selenium fallback failed: " + str(se))
             return ""
 
-    # ---------------- DuckDuckGo Web Details Methods ---------------- #
-    def _get_duckduckgo_snippets(self, url, headers, force_selenium=False):
-        html = self.fetch_html(url, headers, force_selenium=force_selenium)
-        if not html:
-            return []
+    def on_search(self):
+        query = self.search_entry.get().strip()
+        if not query:
+            return
+        self.detail_text.delete("1.0", tk.END)
+        for widget in self.image_frame.winfo_children():
+            widget.destroy()
+        self.log_event(f"General search initiated for: {query}")
+        threading.Thread(target=self.fetch_web_details_duckduckgo, args=(query,), daemon=True).start()
+        threading.Thread(target=self.fetch_images_google, args=(query,), daemon=True).start()
+
+    def fetch_web_details_duckduckgo(self, query):
+        query_str = query + " uses"
+        query_encoded = urllib.parse.quote(query_str)
+        url = "https://html.duckduckgo.com/html/?q=" + query_encoded
+        headers = {"User-Agent": "Mozilla/5.0"}
+        self.log_event(f"Fetching details from DuckDuckGo: {query_str}")
+        html = self.fetch_html(url, headers)
         snippets = []
-        soup = BeautifulSoup(html, "html.parser")
-        # DuckDuckGo's HTML version wraps each result in a <div class="result">
-        for result in soup.find_all("div", class_="result"):
-            snippet = result.find("a", class_="result__snippet")
-            if snippet is None:
-                snippet = result.find("div", class_="result__snippet")
-            if snippet:
-                text = snippet.get_text().strip()
-                if text and len(text.split()) > 5:
-                    snippets.append(text)
-            if len(snippets) >= 5:
-                break
-        return snippets
-
-    def fetch_web_details_duckduckgo(self, herb_name, parts):
-        base_query = herb_name + (" " + parts if parts else "")
-        query_str = base_query + " uses"
-        query = urllib.parse.quote(query_str)
-        url = "https://html.duckduckgo.com/html/?q=" + query
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-
-        self.log_event(f"Fetching web details from DuckDuckGo with query: '{query_str}'")
-        snippets = self._get_duckduckgo_snippets(url, headers)
-        if not snippets:
-            self.log_event("No valid snippets found with requests. Trying forced Selenium for primary query.")
-            snippets = self._get_duckduckgo_snippets(url, headers, force_selenium=True)
-        if not snippets:
-            fallback_query_str = base_query + " medicinal uses"
-            fallback_query = urllib.parse.quote(fallback_query_str)
-            fallback_url = "https://html.duckduckgo.com/html/?q=" + fallback_query
-            self.log_event(f"No valid snippets found. Trying fallback query: '{fallback_query_str}'")
-            snippets = self._get_duckduckgo_snippets(fallback_url, headers)
-            if not snippets:
-                self.log_event("Fallback (medicinal uses) did not return any snippets. Trying forced Selenium for fallback query.")
-                snippets = self._get_duckduckgo_snippets(fallback_url, headers, force_selenium=True)
-
-        if snippets:
-            formatted_snippets = [self.format_text(snippet) for snippet in snippets]
-            details_text = "\n\nWeb Details (DuckDuckGo):\n\n" + "\n\n".join(formatted_snippets)
-            self.detail_text.insert(tk.END, details_text)
-            self.log_event("Web details fetched successfully from DuckDuckGo.")
-        else:
-            self.detail_text.insert(tk.END, "\nNo additional web details found from DuckDuckGo.")
-            self.log_event("No additional web details found from DuckDuckGo.")
-
-    # ---------------- Google Image Fetching ---------------- #
-    def fetch_images_google(self, herb_name, parts):
-        query_text = herb_name + (" " + parts if parts else "")
-        query = urllib.parse.quote(query_text)
-        url = "https://www.google.com/search?tbm=isch&q=" + query
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-        try:
-            self.log_event("Fetching images from Google...")
-            html = self.fetch_html(url, headers)
-            if not html:
-                self.image_frame.after(0, lambda: tk.Label(self.image_frame, text="Error fetching images",
-                                                           font=("Helvetica", 14)).pack())
-                return
-
+        if html:
             soup = BeautifulSoup(html, "html.parser")
-            img_urls = []
-            # Look for image tags; filter out non-result images
-            for tag in soup.find_all("img"):
-                img_url = tag.get("data-src") or tag.get("src")
-                if img_url and img_url.startswith("http") and img_url not in img_urls:
-                    img_urls.append(img_url)
-                if len(img_urls) >= 9:
+            for result in soup.find_all("div", class_="result"):
+                snippet = result.find("a", class_="result__snippet")
+                if snippet is None:
+                    snippet = result.find("div", class_="result__snippet")
+                if snippet:
+                    text = snippet.get_text().strip()
+                    if text and len(text.split()) > 5:
+                        snippets.append(text)
+                if len(snippets) >= 5:
                     break
+        if snippets:
+            formatted = "\n\n".join(self.format_text(s) for s in snippets)
+            self.detail_text.insert(tk.END, "\n\nWeb Details (DuckDuckGo):\n" + formatted)
+            self.log_event("Web details fetched successfully.")
+        else:
+            self.detail_text.insert(tk.END, "\nNo additional web details found.")
+            self.log_event("No web details found.")
 
-            # Clear existing images
-            self.image_frame.after(0, lambda: [w.destroy() for w in self.image_frame.winfo_children()])
+    def fetch_images_google(self, query):
+        query_encoded = urllib.parse.quote(query)
+        url = "https://www.google.com/search?tbm=isch&q=" + query_encoded
+        headers = {"User-Agent": "Mozilla/5.0"}
+        self.log_event(f"Fetching images from Google for: {query}")
+        html = self.fetch_html(url, headers)
+        if not html:
+            self.log_event("Error fetching images.")
+            return
+        soup = BeautifulSoup(html, "html.parser")
+        img_urls = []
+        for tag in soup.find_all("img"):
+            img_url = tag.get("data-src") or tag.get("src")
+            if img_url and img_url.startswith("http") and img_url not in img_urls:
+                img_urls.append(img_url)
+            if len(img_urls) >= 9:
+                break
+        for widget in self.image_frame.winfo_children():
+            widget.destroy()
+        photos = []
+        for index, img_url in enumerate(img_urls):
+            try:
+                img_resp = requests.get(img_url, headers=headers, timeout=10)
+                image = Image.open(io.BytesIO(img_resp.content))
+                image = image.resize((175, 175))
+                photo = ImageTk.PhotoImage(image)
+                photos.append(photo)
+                container = tk.Frame(self.image_frame, bd=1, relief=tk.RAISED)
+                container.grid(row=index // 3, column=index % 3, padx=5, pady=5)
+                img_label = tk.Label(container, image=photo, cursor="hand2")
+                img_label.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+                caption = tk.Label(container, text=query, font=("Helvetica", 12))
+                caption.pack(side=tk.BOTTOM, fill=tk.X)
+                img_label.bind("<Button-1>", lambda e, url=img_url: self.on_image_click(url))
+            except Exception as e:
+                self.log_event("Image error: " + str(e))
+        self.image_frame.photos = photos
 
-            photos = []
-            for index, img_url in enumerate(img_urls):
-                try:
-                    img_resp = requests.get(img_url, headers=headers, timeout=10)
-                    image = Image.open(io.BytesIO(img_resp.content))
-                    image = image.resize((175, 175))  # Resize image to 175x175 pixels
-                    photo = ImageTk.PhotoImage(image)
-                    photos.append(photo)
+    def format_text(self, text):
+        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+        return "\n".join(sentence.strip() for sentence in sentences if sentence)
 
-                    def add_image(photo=photo, row=index // 3, col=index % 3, image_url=img_url):
-                        container = tk.Frame(self.image_frame, bd=1, relief=tk.RAISED)
-                        container.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
-                        img_label = tk.Label(container, image=photo, cursor="hand2")
-                        img_label.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-                        caption_text = f"{self.herb_combo.get()}"
-                        if parts:
-                            caption_text += f" - {parts}"
-                        caption = tk.Label(container, text=caption_text, font=("Helvetica", 12))
-                        caption.pack(side=tk.BOTTOM, fill=tk.X)
-                        img_label.bind("<Button-1>", lambda e, u=image_url: self.show_image_details(u))
-                    self.image_frame.after(0, add_image)
-                except Exception as e:
-                    self.log_event("Error processing image: " + str(e))
-            self.image_frame.photos = photos
+    def on_image_click(self, url):
+        messagebox.showinfo("Image Details", f"Image URL:\n{url}")
+        self.log_event("Image clicked: " + url)
 
-            if not img_urls:
-                self.image_frame.after(0, lambda: tk.Label(self.image_frame, text="No image available",
-                                                           font=("Helvetica", 14)).pack())
-            self.log_event("Images fetched successfully from Google.")
-        except Exception as e:
-            self.image_frame.after(0, lambda: [w.destroy() for w in self.image_frame.winfo_children()])
-            self.image_frame.after(0, lambda: tk.Label(self.image_frame, text="Error fetching images",
-                                                       font=("Helvetica", 14)).pack())
-            self.log_event("Error fetching images from Google: " + str(e))
-
-    def show_image_details(self, image_url):
-        details = f"Image URL:\n{image_url}"
-        messagebox.showinfo("Image Details", details)
-        self.log_event("Image clicked: " + image_url)
 
 # ---------------- Main Execution ---------------- #
 if __name__ == "__main__":
     root = tk.Tk()
-    root.withdraw()  # Hide main window during splash
-    splash = SplashScreen(root)
-    root.after(2000, lambda: (root.deiconify(), HerbApp(root)))
+    app = MainApp(root)
     root.mainloop()
