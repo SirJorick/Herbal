@@ -12,7 +12,7 @@ import re
 import socket
 import subprocess
 import sys
-
+from deep_translator import GoogleTranslator  # pip install deep-translator
 
 # ---------------- Tor Daemon Helpers ---------------- #
 def is_tor_running(port=9050):
@@ -25,13 +25,11 @@ def is_tor_running(port=9050):
     except Exception:
         return False
 
-
 def start_tor_daemon():
     """
     Attempt to start the Tor daemon.
     IMPORTANT: This uses the specified tor.exe path.
     """
-    # Updated tor_path to your specified location
     tor_path = r"C:\Users\user\PycharmProjects\Herbal\tor_4.0.6\tor\tor.exe"
     try:
         subprocess.Popen([tor_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -39,7 +37,6 @@ def start_tor_daemon():
     except Exception as e:
         print("Failed to start Tor daemon:", e)
         return False
-
 
 # ---------------- Suggestion Fetcher ---------------- #
 def get_google_suggestions(query):
@@ -53,7 +50,6 @@ def get_google_suggestions(query):
     except Exception:
         return []
     return []
-
 
 # ---------------- AutocompleteEntry with Floating Toplevel ---------------- #
 class AutocompleteEntry(tk.Entry):
@@ -118,7 +114,6 @@ class AutocompleteEntry(tk.Entry):
                 self.insert(0, value)
                 self.hide_suggestions()
 
-
 # ---------------- Main Application with Notebook ---------------- #
 class MainApp:
     def __init__(self, root):
@@ -137,13 +132,38 @@ class MainApp:
         self.notebook.add(self.deep_learn_tab.frame, text="Deep Learn")
         self.notebook.add(self.general_tab.frame, text="General Search")
 
+# ---------------- Common Language Data ---------------- #
+LANGUAGES = {
+    "Afrikaans": "af", "Albanian": "sq", "Amharic": "am", "Arabic": "ar", "Armenian": "hy",
+    "Azerbaijani": "az", "Basque": "eu", "Belarusian": "be", "Bengali": "bn", "Bosnian": "bs",
+    "Bulgarian": "bg", "Catalan": "ca", "Cebuano": "ceb", "Chichewa": "ny", "Chinese (Simplified)": "zh-cn",
+    "Chinese (Traditional)": "zh-tw", "Corsican": "co", "Croatian": "hr", "Czech": "cs", "Danish": "da",
+    "Dutch": "nl", "English": "en", "Esperanto": "eo", "Estonian": "et", "Filipino": "tl",
+    "Finnish": "fi", "French": "fr", "Frisian": "fy", "Galician": "gl", "Georgian": "ka",
+    "German": "de", "Greek": "el", "Gujarati": "gu", "Haitian Creole": "ht", "Hausa": "ha",
+    "Hawaiian": "haw", "Hebrew": "he", "Hindi": "hi", "Hmong": "hmn", "Hungarian": "hu",
+    "Icelandic": "is", "Igbo": "ig", "Indonesian": "id", "Irish": "ga", "Italian": "it",
+    "Japanese": "ja", "Javanese": "jw", "Kannada": "kn", "Kazakh": "kk", "Khmer": "km",
+    "Kinyarwanda": "rw", "Korean": "ko", "Kurdish (Kurmanji)": "ku", "Kyrgyz": "ky", "Lao": "lo",
+    "Latin": "la", "Latvian": "lv", "Lithuanian": "lt", "Luxembourgish": "lb", "Macedonian": "mk",
+    "Malagasy": "mg", "Malay": "ms", "Malayalam": "ml", "Maltese": "mt", "Maori": "mi",
+    "Marathi": "mr", "Mongolian": "mn", "Myanmar (Burmese)": "my", "Nepali": "ne", "Norwegian": "no",
+    "Odia": "or", "Pashto": "ps", "Persian": "fa", "Polish": "pl", "Portuguese": "pt",
+    "Punjabi": "pa", "Romanian": "ro", "Russian": "ru", "Samoan": "sm", "Scots Gaelic": "gd",
+    "Serbian": "sr", "Sesotho": "st", "Shona": "sn", "Sindhi": "sd", "Sinhala": "si",
+    "Slovak": "sk", "Slovenian": "sl", "Somali": "so", "Spanish": "es", "Sundanese": "su",
+    "Swahili": "sw", "Swedish": "sv", "Tagalog": "tl", "Tajik": "tg", "Tamil": "ta",
+    "Telugu": "te", "Thai": "th", "Turkish": "tr", "Ukrainian": "uk", "Urdu": "ur",
+    "Uzbek": "uz", "Vietnamese": "vi", "Welsh": "cy", "Xhosa": "xh", "Yiddish": "yi",
+    "Yoruba": "yo", "Zulu": "zu"
+}
+LANGUAGE_LIST = sorted(LANGUAGES.keys())
 
 # ---------------- HerbTab ---------------- #
 class HerbTab:
     def __init__(self, parent):
         self.frame = tk.Frame(parent)
-
-        # Top frame with herb selection and Go button
+        # Top panel for herb selection and language translator
         top_frame = tk.Frame(self.frame)
         top_frame.pack(side=tk.TOP, fill=tk.X, padx=5, pady=5)
         tk.Label(top_frame, text="Select Herb:", font=("Helvetica", 14)).pack(side=tk.LEFT, padx=5)
@@ -152,6 +172,12 @@ class HerbTab:
         self.herb_combo.bind("<<ComboboxSelected>>", self.on_herb_selected)
         self.go_button = tk.Button(top_frame, text="Go", font=("Helvetica", 14), command=self.on_go_clicked)
         self.go_button.pack(side=tk.LEFT, padx=5)
+        # Language translator combobox for HerbTab
+        tk.Label(top_frame, text="Language:", font=("Helvetica", 14)).pack(side=tk.LEFT, padx=5)
+        self.language_combo = ttk.Combobox(top_frame, state="readonly", font=("Helvetica", 14), width=20)
+        self.language_combo['values'] = LANGUAGE_LIST
+        self.language_combo.set("English")
+        self.language_combo.pack(side=tk.LEFT, padx=5)
 
         # Main frame for details and images
         main_frame = tk.Frame(self.frame)
@@ -160,11 +186,14 @@ class HerbTab:
         main_frame.columnconfigure(1, weight=4)
         main_frame.rowconfigure(0, weight=1)
 
-        # Left panel for details
+        # Left panel: Scrollable detail text
         left_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
         left_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         self.detail_text = tk.Text(left_frame, wrap=tk.WORD, font=("Helvetica", 12))
-        self.detail_text.pack(fill=tk.BOTH, expand=True)
+        self.detail_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        dt_scroll = tk.Scrollbar(left_frame, command=self.detail_text.yview)
+        dt_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        self.detail_text.config(yscrollcommand=dt_scroll.set)
 
         # Right panel for images (scrollable)
         right_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
@@ -173,21 +202,19 @@ class HerbTab:
         right_frame.columnconfigure(0, weight=1)
         self.image_canvas = tk.Canvas(right_frame)
         self.image_canvas.grid(row=0, column=0, sticky="nsew")
-        v_scrollbar = tk.Scrollbar(right_frame, orient="vertical", command=self.image_canvas.yview)
-        v_scrollbar.grid(row=0, column=1, sticky="ns")
-        self.image_canvas.configure(yscrollcommand=v_scrollbar.set)
+        img_scroll = tk.Scrollbar(right_frame, orient="vertical", command=self.image_canvas.yview)
+        img_scroll.grid(row=0, column=1, sticky="ns")
+        self.image_canvas.configure(yscrollcommand=img_scroll.set)
         self.image_frame = tk.Frame(self.image_canvas)
         self.image_canvas.create_window((0, 0), window=self.image_frame, anchor="nw")
-        self.image_frame.bind("<Configure>",
-                              lambda e: self.image_canvas.configure(scrollregion=self.image_canvas.bbox("all")))
+        self.image_frame.bind("<Configure>", lambda e: self.image_canvas.configure(scrollregion=self.image_canvas.bbox("all")))
 
-        # Console at bottom
+        # Console at bottom (already scrollable)
         console_frame = tk.Frame(self.frame, bd=2, relief=tk.SUNKEN)
         console_frame.pack(side=tk.BOTTOM, fill=tk.X)
         self.console_text = tk.Text(console_frame, height=5, state="disabled", font=("Helvetica", 10))
         self.console_text.pack(fill=tk.X)
 
-        # Load CSV data
         self.herb_data = self.load_csv("herbal.csv")
         herbs = [row["name"] for row in self.herb_data]
         self.herb_combo['values'] = herbs
@@ -280,9 +307,26 @@ class HerbTab:
                 if len(snippets) >= 5:
                     break
         if snippets:
-            formatted = "\n\n".join(self.format_text(s) for s in snippets)
-            self.detail_text.insert(tk.END, "\n\nWeb Details (DuckDuckGo):\n" + formatted)
-            self.log_event("Web details fetched successfully.")
+            # Use the selected language from the translator combobox
+            selected_language = self.language_combo.get() if self.language_combo.get() else "English"
+            lang_code = LANGUAGES.get(selected_language, "en")
+            if lang_code != "en":
+                translated_snippets = []
+                for s in snippets:
+                    try:
+                        translation = GoogleTranslator(source='auto', target=lang_code).translate(s)
+                        translated_snippets.append(translation)
+                    except Exception as e:
+                        self.log_event("Translation error: " + str(e))
+                        translated_snippets.append(s)
+                final_snippets = translated_snippets
+                header = f"\n\nWeb Details (DuckDuckGo) in {selected_language}:\n"
+            else:
+                final_snippets = snippets
+                header = "\n\nWeb Details (DuckDuckGo):\n"
+            formatted = "\n\n".join(self.format_text(s) for s in final_snippets)
+            self.detail_text.insert(tk.END, header + formatted)
+            self.log_event("Web details fetched and translated successfully.")
         else:
             self.detail_text.insert(tk.END, "\nNo additional web details found.")
             self.log_event("No web details found.")
@@ -335,13 +379,13 @@ class HerbTab:
         messagebox.showinfo("Image Details", f"Image URL:\n{url}")
         self.log_event("Image clicked: " + url)
 
-
-# ---------------- DeepLearnTab (Now Using Regular Endpoints via Tor Proxy) ---------------- #
+# ---------------- DeepLearnTab ---------------- #
 class DeepLearnTab:
     def __init__(self, parent):
         self.frame = tk.Frame(parent)
         self.error_notified = False
 
+        # Top panel: Deep search entry and language combobox
         search_frame = tk.Frame(self.frame)
         search_frame.pack(side=tk.TOP, fill=tk.X, padx=5, pady=5)
         tk.Label(search_frame, text="Deep Search:", font=("Helvetica", 14)).pack(side=tk.LEFT, padx=5)
@@ -350,38 +394,50 @@ class DeepLearnTab:
         self.search_entry.bind("<<SearchTriggered>>", lambda e: self.on_search())
         self.search_button = tk.Button(search_frame, text="Search", font=("Helvetica", 14), command=self.on_search)
         self.search_button.pack(side=tk.LEFT, padx=5)
+        # Language combobox for DeepLearnTab
+        tk.Label(search_frame, text="Language:", font=("Helvetica", 14)).pack(side=tk.LEFT, padx=5)
+        self.language_combo = ttk.Combobox(search_frame, state="readonly", font=("Helvetica", 14), width=20)
+        self.language_combo['values'] = LANGUAGE_LIST
+        self.language_combo.set("English")
+        self.language_combo.pack(side=tk.LEFT, padx=5)
 
+        # Main frame for details and images
         main_frame = tk.Frame(self.frame)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         main_frame.columnconfigure(0, weight=1)
         main_frame.columnconfigure(1, weight=4)
         main_frame.rowconfigure(0, weight=1)
 
+        # Left panel: Scrollable detail text
         left_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
         left_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         self.detail_text = tk.Text(left_frame, wrap=tk.WORD, font=("Helvetica", 12))
-        self.detail_text.pack(fill=tk.BOTH, expand=True)
+        self.detail_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        dt_scroll = tk.Scrollbar(left_frame, command=self.detail_text.yview)
+        dt_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        self.detail_text.config(yscrollcommand=dt_scroll.set)
 
+        # Right panel for images (scrollable)
         right_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
         right_frame.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
         right_frame.rowconfigure(0, weight=1)
         right_frame.columnconfigure(0, weight=1)
         self.image_canvas = tk.Canvas(right_frame)
         self.image_canvas.grid(row=0, column=0, sticky="nsew")
-        v_scrollbar = tk.Scrollbar(right_frame, orient="vertical", command=self.image_canvas.yview)
-        v_scrollbar.grid(row=0, column=1, sticky="ns")
-        self.image_canvas.configure(yscrollcommand=v_scrollbar.set)
+        img_scroll = tk.Scrollbar(right_frame, orient="vertical", command=self.image_canvas.yview)
+        img_scroll.grid(row=0, column=1, sticky="ns")
+        self.image_canvas.configure(yscrollcommand=img_scroll.set)
         self.image_frame = tk.Frame(self.image_canvas)
         self.image_canvas.create_window((0, 0), window=self.image_frame, anchor="nw")
-        self.image_frame.bind("<Configure>",
-                              lambda e: self.image_canvas.configure(scrollregion=self.image_canvas.bbox("all")))
+        self.image_frame.bind("<Configure>", lambda e: self.image_canvas.configure(scrollregion=self.image_canvas.bbox("all")))
 
+        # Console at bottom
         console_frame = tk.Frame(self.frame, bd=2, relief=tk.SUNKEN)
         console_frame.pack(side=tk.BOTTOM, fill=tk.X)
         self.console_text = tk.Text(console_frame, height=5, state="disabled", font=("Helvetica", 10))
         self.console_text.pack(fill=tk.X)
 
-        # Instead of using an onion service (v2), we use regular endpoints:
+        # Base URLs for deep search (using Tor proxy)
         self.deep_details_base_url = "https://html.duckduckgo.com/html/?q="
         self.deep_images_base_url = "https://www.google.com/search?tbm=isch&q="
 
@@ -403,11 +459,9 @@ class DeepLearnTab:
                 raise Exception("Non-200 status code")
             return resp.text
         except Exception as e:
-            error_str = str(e)
-            self.log_event(f"Deep request failed for {url}: {error_str}")
+            self.log_event(f"Deep request failed for {url}: {str(e)}")
             if not self.error_notified:
-                self.detail_text.insert(tk.END,
-                                        "\nDeep search service is currently unavailable. Please try again later.\n")
+                self.detail_text.insert(tk.END, "\nDeep search service is currently unavailable. Please try again later.\n")
                 self.error_notified = True
             return ""
 
@@ -441,9 +495,25 @@ class DeepLearnTab:
                 if len(snippets) >= 5:
                     break
         if snippets:
-            formatted = "\n\n".join(self.format_text(s) for s in snippets)
-            self.detail_text.insert(tk.END, "\n\nDeep Web Details:\n" + formatted)
-            self.log_event("Deep web details fetched successfully.")
+            selected_language = self.language_combo.get() if self.language_combo.get() else "English"
+            lang_code = LANGUAGES.get(selected_language, "en")
+            if lang_code != "en":
+                translated_snippets = []
+                for s in snippets:
+                    try:
+                        translation = GoogleTranslator(source='auto', target=lang_code).translate(s)
+                        translated_snippets.append(translation)
+                    except Exception as e:
+                        self.log_event("Translation error: " + str(e))
+                        translated_snippets.append(s)
+                final_snippets = translated_snippets
+                header = f"\n\nDeep Web Details in {selected_language}:\n"
+            else:
+                final_snippets = snippets
+                header = "\n\nDeep Web Details:\n"
+            formatted = "\n\n".join(self.format_text(s) for s in final_snippets)
+            self.detail_text.insert(tk.END, header + formatted)
+            self.log_event("Deep web details fetched and translated successfully.")
         else:
             if not html:
                 self.log_event("No deep web details found due to connection issues.")
@@ -503,7 +573,6 @@ class DeepLearnTab:
         messagebox.showinfo("Deep Image Details", f"Image URL:\n{url}")
         self.log_event("Deep image clicked: " + url)
 
-
 # ---------------- GeneralSearchTab ---------------- #
 class GeneralSearchTab:
     def __init__(self, parent):
@@ -516,32 +585,44 @@ class GeneralSearchTab:
         self.search_entry.bind("<<SearchTriggered>>", lambda e: self.on_search())
         self.search_button = tk.Button(search_frame, text="Search", font=("Helvetica", 14), command=self.on_search)
         self.search_button.pack(side=tk.LEFT, padx=5)
+        # Language combobox for GeneralSearchTab
+        tk.Label(search_frame, text="Language:", font=("Helvetica", 14)).pack(side=tk.LEFT, padx=5)
+        self.language_combo = ttk.Combobox(search_frame, state="readonly", font=("Helvetica", 14), width=20)
+        self.language_combo['values'] = LANGUAGE_LIST
+        self.language_combo.set("English")
+        self.language_combo.pack(side=tk.LEFT, padx=5)
 
+        # Main frame for details and images
         main_frame = tk.Frame(self.frame)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         main_frame.columnconfigure(0, weight=1)
         main_frame.columnconfigure(1, weight=4)
         main_frame.rowconfigure(0, weight=1)
 
+        # Left panel: Scrollable detail text
         left_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
         left_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         self.detail_text = tk.Text(left_frame, wrap=tk.WORD, font=("Helvetica", 12))
-        self.detail_text.pack(fill=tk.BOTH, expand=True)
+        self.detail_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        dt_scroll = tk.Scrollbar(left_frame, command=self.detail_text.yview)
+        dt_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        self.detail_text.config(yscrollcommand=dt_scroll.set)
 
+        # Right panel for images (scrollable)
         right_frame = tk.Frame(main_frame, bd=2, relief=tk.SUNKEN)
         right_frame.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
         right_frame.rowconfigure(0, weight=1)
         right_frame.columnconfigure(0, weight=1)
         self.image_canvas = tk.Canvas(right_frame)
         self.image_canvas.grid(row=0, column=0, sticky="nsew")
-        v_scrollbar = tk.Scrollbar(right_frame, orient="vertical", command=self.image_canvas.yview)
-        v_scrollbar.grid(row=0, column=1, sticky="ns")
-        self.image_canvas.configure(yscrollcommand=v_scrollbar.set)
+        img_scroll = tk.Scrollbar(right_frame, orient="vertical", command=self.image_canvas.yview)
+        img_scroll.grid(row=0, column=1, sticky="ns")
+        self.image_canvas.configure(yscrollcommand=img_scroll.set)
         self.image_frame = tk.Frame(self.image_canvas)
         self.image_canvas.create_window((0, 0), window=self.image_frame, anchor="nw")
-        self.image_frame.bind("<Configure>",
-                              lambda e: self.image_canvas.configure(scrollregion=self.image_canvas.bbox("all")))
+        self.image_frame.bind("<Configure>", lambda e: self.image_canvas.configure(scrollregion=self.image_canvas.bbox("all")))
 
+        # Console at bottom
         console_frame = tk.Frame(self.frame, bd=2, relief=tk.SUNKEN)
         console_frame.pack(side=tk.BOTTOM, fill=tk.X)
         self.console_text = tk.Text(console_frame, height=5, state="disabled", font=("Helvetica", 10))
@@ -594,9 +675,25 @@ class GeneralSearchTab:
                 if len(snippets) >= 5:
                     break
         if snippets:
-            formatted = "\n\n".join(self.format_text(s) for s in snippets)
-            self.detail_text.insert(tk.END, "\n\nWeb Details (DuckDuckGo):\n" + formatted)
-            self.log_event("Web details fetched successfully.")
+            selected_language = self.language_combo.get() if self.language_combo.get() else "English"
+            lang_code = LANGUAGES.get(selected_language, "en")
+            if lang_code != "en":
+                translated_snippets = []
+                for s in snippets:
+                    try:
+                        translation = GoogleTranslator(source='auto', target=lang_code).translate(s)
+                        translated_snippets.append(translation)
+                    except Exception as e:
+                        self.log_event("Translation error: " + str(e))
+                        translated_snippets.append(s)
+                final_snippets = translated_snippets
+                header = f"\n\nWeb Details (DuckDuckGo) in {selected_language}:\n"
+            else:
+                final_snippets = snippets
+                header = "\n\nWeb Details (DuckDuckGo):\n"
+            formatted = "\n\n".join(self.format_text(s) for s in final_snippets)
+            self.detail_text.insert(tk.END, header + formatted)
+            self.log_event("Web details fetched and translated successfully.")
         else:
             self.detail_text.insert(tk.END, "\nNo additional web details found.")
             self.log_event("No web details found.")
@@ -648,7 +745,6 @@ class GeneralSearchTab:
     def on_image_click(self, url):
         messagebox.showinfo("Image Details", f"Image URL:\n{url}")
         self.log_event("Image clicked: " + url)
-
 
 # ---------------- Main Execution ---------------- #
 if __name__ == "__main__":
