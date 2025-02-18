@@ -119,7 +119,7 @@ class MainApp:
     def __init__(self, root):
         self.root = root
         self.root.title("General Search, Deep Learn & Herbs App")
-        self.root.geometry("1600x900")
+        self.root.geometry("1700x900")
 
         self.notebook = ttk.Notebook(root)
         self.notebook.pack(fill=tk.BOTH, expand=True)
