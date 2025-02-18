@@ -1,251 +1,501 @@
-name,parts
-Aloe Vera,leaf gel
-Ginger,root
-Turmeric,rhizome
-Ginseng,root
-Garlic,bulb
-Echinacea,"flowers, leaves, roots"
-Peppermint,leaves
-Basil,leaves
-Rosemary,"leaves, flowers"
-Sage,leaves
-Thyme,"leaves, flowers"
-Lavender,"flowers, leaves"
-Chamomile,flowers
-Cinnamon,bark
-Cloves,flower buds
-Cardamom,seed pods
-Oregano,leaves
-Licorice,root
-Dandelion,"leaves, root, flower"
-Milk Thistle,seeds
-Valerian,root
-St. John’s Wort,"flowers, leaves"
-Bilberry,fruit
-Hawthorn,"berries, leaves, flowers"
-Evening Primrose,"flowers, seeds"
-Feverfew,"leaves, flowers"
-Gotu Kola,leaves
-Ginkgo Biloba,leaves
-Green Tea,Camellia sinensis leaves
-Cat’s Claw,"bark, root"
-Devil’s Claw,root
-Fenugreek,"seeds, leaves"
-Fennel,"seeds, leaves"
-Marshmallow Root,root
-Meadowsweet,"flowers, leaves"
-Passionflower,"flowers, leaves"
-Red Clover,flowers
-Rhodiola,root
-Slippery Elm,bark
-Yarrow,"flowers, leaves"
-Anise,seeds
-Angelica,"root, seeds"
-Arnica,flowers
-Astragalus,root
-Black Cohosh,root
-Blueberry,"fruit, leaves"
-Cranberry,"fruit, leaves"
-Elderberry,"fruit, flowers, leaves"
-Burdock,root
-Calendula,flowers
-Camu Camu,fruit
-Caraway,seeds
-Catnip,leaves
-Chicory,"root, leaves"
-Chives,"leaves, flowers"
-Cinnamon Basil,leaves
-Clary Sage,leaves
-Coriander,"seeds, leaves"
-Cumin,seeds
-Dill,"seeds, leaves"
-Elderflower,flowers
-Eucalyptus,leaves
-Hibiscus,"flowers, leaves"
-Horehound,"leaves, flowers"
-Horse Chestnut,"seeds, bark"
-Hops,flowers
-Hyssop,leaves
-Irish Moss,seaweed
-Juniper,"berries, leaves"
-Kava Kava,root
-Lemongrass,leaves
-Lemon Balm,leaves
-Lovage,"leaves, roots"
-Mallow,"leaves, flowers"
-Manuka,"leaves, flowers"
-Mistletoe,"leaves, berries"
-Myrrh,resin
-Nettle,leaves
-Oat Straw,leaves
-Olive Leaf,leaves
-Papaya,"fruit, seeds"
-Parsley,leaves
-Pau d’Arco,bark
-Poppy,"seeds, flowers, latex"
-Prickly Ash,"bark, root"
-Raspberry Leaf,leaves
-Red Raspberry,"fruit, leaves"
-Rhubarb,"root, petioles"
-Rose,"petals, hips"
-Saffron,stigmas
-Saw Palmetto,berries
-Schisandra,berries
-Sea Buckthorn,"berries, leaves"
-Skullcap,"leaves, flowers"
-Sorrel,leaves
-Sweet Woodruff,leaves
-Uva Ursi,leaves
-Vervain,"leaves, flowers"
-Wormwood,leaves
-Yellow Dock,"root, leaves"
-Zedoary,rhizome
-Ashwagandha,root
-Bacopa,leaves
-Boswellia,resin
-Buchu,leaves
-Butcher’s Broom,rhizome
-Celandine,sap
-Chanca Piedra,herb
-Chaparral,"leaves, stems"
-Chinese Skullcap,"root, leaves"
-Chaste Tree Berry,fruit
-Coleus Forskohlii,root
-Cramp Bark,bark
-Damiana,leaves
-Dong Quai,root
-Eclipta (Bhringraj),leaves
-Elecampane,root
-Ephedra,stems
-Flax,"seeds, oil"
-Fo-ti,root
-Fumitory,herb
-Gentian,root
-Goldenrod,"flowers, leaves"
-Gymnema Sylvestre,leaves
-Holy Basil (Tulsi),leaves
-Jiaogulan,leaves
-Kudzu,root
-Lemon Verbena,leaves
-Longjack (Tongkat Ali),root
-Maca,root
-Magnolia Bark,bark
-Moringa,"leaves, seeds, pods"
-Motherwort,"leaves, flowers"
-Mugwort,leaves
-Neem,"leaves, bark, seeds"
-Noni,fruit
-Periwinkle,"leaves, flowers"
-Pleurisy Root,root
-Poke Root,root
-Prickly Pear Cactus,"fruit, pads, seeds"
-Psyllium,"seeds, husks"
-Sarsaparilla,root
-Siberian Ginseng,root
-Solomon’s Seal,rhizome
-Soursop,"fruit, leaves"
-Spilanthes,"flowers, leaves"
-Stevia,leaves
-Artemisia annua (Sweet Wormwood),"leaves, flowers"
-Sweet Clover,"leaves, flowers"
-Tansy,"leaves, flowers"
-Tea Tree,leaves
-Tribulus Terrestris,fruit
-Usnea,lichen
-White Willow,bark
-Wild Cherry,"bark, leaves"
-Wild Yam,rhizome
-Ylang Ylang,flowers
-Acai Berry,fruit
-Amla (Indian Gooseberry),fruit
-Bael,fruit
-Bilimbi,fruit
-Black Seed (Nigella sativa),seeds
-Bitter Melon,fruit
-Blood Orange,fruit
-Buddha’s Hand,fruit
-Calamansi,fruit
-Capers,flower buds
-Carob,pod
-Cashew Apple,fruit
-Cherry,fruit
-Citrus Bergamot,"peel, fruit"
-Clementine,fruit
-Date Palm,fruit
-Fig,"fruit, leaves"
-Goji Berry,fruit
-Grapefruit,fruit
-Grape,"fruit, seeds"
-Guava,"fruit, leaves"
-Jackfruit,"fruit, seeds"
-Jujube,fruit
-Kiwi,fruit
-Kumquat,fruit
-Lemon,"fruit, peel, juice"
-Lime,fruit
-Lychee,fruit
-Mango,"fruit, leaves"
-Mangosteen,fruit
-Medlar,fruit
-Mulberry,"fruit, leaves, bark"
-Orange,"fruit, peel, juice"
-Passionfruit,fruit
-Pawpaw,fruit
-Pear,fruit
-Persimmon,fruit
-Pineapple,"fruit, core"
-Pomegranate,"fruit, peel, seeds"
-Quince,fruit
-Rambutan,fruit
-Banana,fruit
-Sapodilla,fruit
-Starfruit (Carambola),fruit
-Strawberry,fruit
-Tamarind,"fruit, pulp"
-Ugli Fruit,fruit
-Watermelon,"fruit, seeds"
-White Currant,fruit
-Blackberry,fruit
-Blackcurrant,fruit
-Boysenberry,fruit
-Grape Seed Extract,from grape seeds
-Maqui Berry,fruit
-Lingonberry,fruit
-Cloudberry,fruit
-Huckleberry,fruit
-Bugleweed,herb
-Coltsfoot,leaves
-Comfrey,"leaves, roots"
-Plantain,leaves
-Goldenseal,root
-Suma (Brazilian Ginseng),root
-Wild Lettuce,"leaves, latex"
-Anemone (Pulsatilla),herb
-Viper’s Bugloss (Anchusa officinalis),herb
-Borage,"leaves, flowers"
-Summer Savory,leaves
-Wintergreen,"leaves, essential oil"
-Spikenard,root
-Sandalwood,"heartwood, essential oil"
-Barberry,"berries, bark"
-Andrographis,"leaves, stem"
-Bitter Orange,"fruit, peel"
-Wood Betony (Stachys officinalis),leaves
-Blue Cohosh,root
-Black Walnut,"husk, bark"
-Chlorella,algae
-Spirulina,algae
-Reishi Mushroom,"fungus, fruiting body"
-Cordyceps,fungus
-Shiitake Mushroom,fungus
-Turkey Tail Mushroom,fungus
-Maitake Mushroom,fungus
-Lion’s Mane Mushroom,fungus
-Agaricus Blazei,mushroom
-Oyster Mushroom,mushroom
-Chaga Mushroom,fungus
-Tremella,Snow Fungus
-Poria Cocos,fungus used in TCM
-Devil’s Club,"root, bark"
-Safflower,"flowers, seeds"
-Myrtle,"Myrtus communis, leaves, berries"
+Disease/Illness,Herb,Parts,,
+Burns,Aloe Vera,leaf gel,,
+Wounds,Aloe Vera,leaf gel,,
+Nausea,Ginger,root,,
+Digestive Disorders,Ginger,root,,
+Inflammation,Turmeric,rhizome,,
+Arthritis,Turmeric,rhizome,,
+Fatigue,Ginseng,root,,
+Stress,Ginseng,root,,
+High Cholesterol,Garlic,bulb,,
+Infections,Garlic,bulb,,
+Common Cold,Echinacea,flowers, leaves, roots
+Immune Boost,Echinacea,flowers, leaves, roots
+Indigestion,Peppermint,leaves,,
+Headache,Peppermint,leaves,,
+Digestive Disorders,Basil,leaves,,
+Respiratory Infections,Basil,leaves,,
+Memory Loss,Rosemary,leaves, flowers,
+Headache,Rosemary,leaves, flowers,
+Sore Throat,Sage,leaves,,
+Cognitive Decline,Sage,leaves,,
+Respiratory Infections,Thyme,leaves, flowers,
+Cough,Thyme,leaves, flowers,
+Anxiety,Lavender,flowers, leaves,
+Insomnia,Lavender,flowers, leaves,
+Insomnia,Chamomile,flowers,,
+Digestive Disorders,Chamomile,flowers,,
+Diabetes,Cinnamon,bark,,
+Digestive Disorders,Cinnamon,bark,,
+Toothache,Cloves,flower buds,,
+Digestive Disorders,Cloves,flower buds,,
+Digestive Disorders,Cardamom,seed pods,,
+Bad Breath,Cardamom,seed pods,,
+Infections,Oregano,leaves,,
+Respiratory Infections,Oregano,leaves,,
+Sore Throat,Licorice,root,,
+Ulcers,Licorice,root,,
+Liver Detox,Dandelion,leaves, root, flower
+Digestive Disorders,Dandelion,leaves, root, flower
+Liver Detox,Milk Thistle,seeds,,
+Fatty Liver,Milk Thistle,seeds,,
+Insomnia,Valerian,root,,
+Anxiety,Valerian,root,,
+Depression,St. John’s Wort,flowers, leaves,
+Anxiety,St. John’s Wort,flowers, leaves,
+Vision Improvement,Bilberry,fruit,,
+Circulation,Bilberry,fruit,,
+Heart Disease,Hawthorn,berries, leaves, flowers
+High Blood Pressure,Hawthorn,berries, leaves, flowers
+Skin Rashes,Evening Primrose,flowers, seeds,
+Hormonal Imbalances,Evening Primrose,flowers, seeds,
+Migraine,Feverfew,leaves, flowers,
+Inflammation,Feverfew,leaves, flowers,
+Wound Healing,Gotu Kola,leaves,,
+Memory Loss,Gotu Kola,leaves,,
+Memory Loss,Ginkgo Biloba,leaves,,
+Circulation,Ginkgo Biloba,leaves,,
+Antioxidant Support,Green Tea,Camellia sinensis leaves,,
+High Cholesterol,Green Tea,Camellia sinensis leaves,,
+Arthritis,Cat’s Claw,bark, root,
+Inflammation,Cat’s Claw,bark, root,
+Arthritis,Devil’s Claw,root,,
+Joint Pain,Devil’s Claw,root,,
+Diabetes,Fenugreek,seeds, leaves,
+Milk Production,Fenugreek,seeds, leaves,
+Digestive Disorders,Fennel,seeds, leaves,
+Bloating,Fennel,seeds, leaves,
+Sore Throat,Marshmallow Root,root,,
+Cough,Marshmallow Root,root,,
+Headache,Meadowsweet,flowers, leaves,
+Fever,Meadowsweet,flowers, leaves,
+Insomnia,Passionflower,flowers, leaves,
+Anxiety,Passionflower,flowers, leaves,
+Menopausal Symptoms,Red Clover,flowers,,
+Detoxification,Red Clover,flowers,,
+Fatigue,Rhodiola,root,,
+Stress,Rhodiola,root,,
+Digestive Disorders,Slippery Elm,bark,,
+Sore Throat,Slippery Elm,bark,,
+Wounds,Yarrow,flowers, leaves,
+Fever,Yarrow,flowers, leaves,
+Digestive Disorders,Anise,seeds,,
+Cough,Anise,seeds,,
+Digestive Disorders,Angelica,root, seeds,
+Respiratory Infections,Angelica,root, seeds,
+Bruises,Arnica,flowers,,
+Muscle Pain,Arnica,flowers,,
+Immune Boost,Astragalus,root,,
+Fatigue,Astragalus,root,,
+Menopausal Symptoms,Black Cohosh,root,,
+Menstrual Cramps,Black Cohosh,root,,
+Vision Improvement,Blueberry,fruit, leaves,
+Antioxidant Support,Blueberry,fruit, leaves,
+UTI,Cranberry,fruit, leaves,
+Digestive Health,Cranberry,fruit, leaves,
+Flu,Elderberry,fruit, flowers, leaves
+Immune Boost,Elderberry,fruit, flowers, leaves
+Skin Detox,Burdock,root,,
+Blood Purification,Burdock,root,,
+Wounds,Calendula,flowers,,
+Skin Rashes,Calendula,flowers,,
+Immune Boost,Camu Camu,fruit,,
+Vitamin C Deficiency,Camu Camu,fruit,,
+Digestive Disorders,Caraway,seeds,,
+Bloating,Caraway,seeds,,
+Digestive Disorders,Catnip,leaves,,
+Anxiety,Catnip,leaves,,
+Digestive Disorders,Chicory,root, leaves,
+Liver Detox,Chicory,root, leaves,
+High Cholesterol,Chives,leaves, flowers,
+Cardiovascular Health,Chives,leaves, flowers,
+Antioxidant Support,Cinnamon Basil,leaves,,
+Digestive Health,Cinnamon Basil,leaves,,
+Menstrual Cramps,Clary Sage,leaves,,
+Stress Relief,Clary Sage,leaves,,
+Digestive Disorders,Coriander,seeds, leaves,
+Detoxification,Coriander,seeds, leaves,
+Digestive Disorders,Cumin,seeds,,
+Immune Boost,Cumin,seeds,,
+Digestive Disorders,Dill,seeds, leaves,
+Bloating,Dill,seeds, leaves,
+Cold Symptoms,Elderflower,flowers,,
+Flu,Elderflower,flowers,,
+Respiratory Infections,Eucalyptus,leaves,,
+Cough,Eucalyptus,leaves,,
+High Blood Pressure,Hibiscus,flowers, leaves,
+Antioxidant Support,Hibiscus,flowers, leaves,
+Cough,Horehound,leaves, flowers,
+Respiratory Health,Horehound,leaves, flowers,
+Varicose Veins,Horse Chestnut,seeds, bark,
+Circulation,Horse Chestnut,seeds, bark,
+Insomnia,Hops,flowers,,
+Anxiety,Hops,flowers,,
+Respiratory Infections,Hyssop,leaves,,
+Cough,Hyssop,leaves,,
+Thyroid Support,Irish Moss,seaweed,,
+Immune Boost,Irish Moss,seaweed,,
+Digestive Disorders,Juniper,berries, leaves,
+Urinary Infections,Juniper,berries, leaves,
+Anxiety,Kava Kava,root,,
+Insomnia,Kava Kava,root,,
+Digestive Disorders,Lemongrass,leaves,,
+Inflammation,Lemongrass,leaves,,
+Anxiety,Lemon Balm,leaves,,
+Insomnia,Lemon Balm,leaves,,
+Digestive Disorders,Lovage,leaves, roots,
+Kidney Health,Lovage,leaves, roots,
+Skin Rashes,Mallow,leaves, flowers,
+Inflammation,Mallow,leaves, flowers,
+Wounds,Manuka,leaves, flowers,
+Infections,Manuka,leaves, flowers,
+Hypertension,Mistletoe,leaves, berries,
+Immune Boost,Mistletoe,leaves, berries,
+Gum Infections,Myrrh,resin,,
+Wounds,Myrrh,resin,,
+Allergies,Nettle,leaves,,
+Joint Pain,Nettle,leaves,,
+Anxiety,Oat Straw,leaves,,
+Skin Health,Oat Straw,leaves,,
+Infections,Olive Leaf,leaves,,
+Antioxidant Support,Olive Leaf,leaves,,
+Digestive Disorders,Papaya,fruit, seeds,
+Inflammation,Papaya,fruit, seeds,
+Detoxification,Parsley,leaves,,
+Kidney Health,Parsley,leaves,,
+Fungal Infections,Pau d’Arco,bark,,
+Immune Boost,Pau d’Arco,bark,,
+Pain Relief,Poppy,seeds, flowers, latex
+Insomnia,Poppy,seeds, flowers, latex
+Digestive Disorders,Prickly Ash,bark, root,
+Circulation,Prickly Ash,bark, root,
+Menstrual Cramps,Raspberry Leaf,leaves,,
+Digestive Health,Raspberry Leaf,leaves,,
+Digestive Health,Red Raspberry,fruit, leaves,
+Detoxification,Red Raspberry,fruit, leaves,
+Constipation,Rhubarb,root, petioles,
+Digestive Health,Rhubarb,root, petioles,
+Skin Rashes,Rose,petals, hips,
+Stress Relief,Rose,petals, hips,
+Depression,Saffron,stigmas,,
+Antioxidant Support,Saffron,stigmas,,
+Prostate Enlargement,Saw Palmetto,berries,,
+Hair Loss,Saw Palmetto,berries,,
+Liver Detox,Schisandra,berries,,
+Fatigue,Schisandra,berries,,
+Skin Health,Sea Buckthorn,berries, leaves,
+Inflammation,Sea Buckthorn,berries, leaves,
+Anxiety,Skullcap,leaves, flowers,
+Insomnia,Skullcap,leaves, flowers,
+Digestive Disorders,Sorrel,leaves,,
+Detoxification,Sorrel,leaves,,
+Sleep Disorders,Sweet Woodruff,leaves,,
+Anxiety,Sweet Woodruff,leaves,,
+UTI,Uva Ursi,leaves,,
+Kidney Health,Uva Ursi,leaves,,
+Anxiety,Vervain,leaves, flowers,
+Menstrual Cramps,Vervain,leaves, flowers,
+Digestive Disorders,Wormwood,leaves,,
+Parasite Infections,Wormwood,leaves,,
+Anemia,Yellow Dock,root, leaves,
+Liver Detox,Yellow Dock,root, leaves,
+Digestive Disorders,Zedoary,rhizome,,
+Inflammation,Zedoary,rhizome,,
+Stress,Ashwagandha,root,,
+Fatigue,Ashwagandha,root,,
+Memory Loss,Bacopa,leaves,,
+Cognitive Decline,Bacopa,leaves,,
+Arthritis,Boswellia,resin,,
+Inflammation,Boswellia,resin,,
+Urinary Infections,Buchu,leaves,,
+Kidney Health,Buchu,leaves,,
+Varicose Veins,Butcher’s Broom,rhizome,,
+Circulation,Butcher’s Broom,rhizome,,
+Gallstones,Celandine,sap,,
+Liver Detox,Celandine,sap,,
+Kidney Stones,Chanca Piedra,herb,,
+Liver Detox,Chanca Piedra,herb,,
+Skin Infections,Chaparral,leaves, stems,
+Detoxification,Chaparral,leaves, stems,
+Inflammation,Chinese Skullcap,root, leaves,
+Anxiety,Chinese Skullcap,root, leaves,
+Menstrual Cramps,Chaste Tree Berry,fruit,,
+Hormonal Imbalances,Chaste Tree Berry,fruit,,
+Weight Loss,Coleus Forskohlii,root,,
+Cardiovascular Health,Coleus Forskohlii,root,,
+Muscle Cramps,Cramp Bark,bark,,
+Menstrual Pain,Cramp Bark,bark,,
+Low Libido,Damiana,leaves,,
+Anxiety,Damiana,leaves,,
+Menstrual Cramps,Dong Quai,root,,
+Hormonal Imbalances,Dong Quai,root,,
+Hair Loss,Eclipta (Bhringraj),leaves,,
+Skin Health,Eclipta (Bhringraj),leaves,,
+Respiratory Infections,Elecampane,root,,
+Cough,Elecampane,root,,
+Asthma,Ephedra,stems,,
+Respiratory Infections,Ephedra,stems,,
+High Cholesterol,Flax,seeds, oil,
+Digestive Health,Flax,seeds, oil,
+Hair Loss,Fo-ti,root,,
+Aging,Fo-ti,root,,
+Liver Detox,Fumitory,herb,,
+Digestive Disorders,Fumitory,herb,,
+Digestive Disorders,Gentian,root,,
+Appetite Stimulation,Gentian,root,,
+Urinary Infections,Goldenrod,flowers, leaves,
+Inflammation,Goldenrod,flowers, leaves,
+Diabetes,Gymnema Sylvestre,leaves,,
+Weight Loss,Gymnema Sylvestre,leaves,,
+Stress,Holy Basil (Tulsi),leaves,,
+Respiratory Infections,Holy Basil (Tulsi),leaves,,
+Antioxidant Support,Jiaogulan,leaves,,
+Fatigue,Jiaogulan,leaves,,
+Alcohol Withdrawal,Kudzu,root,,
+Digestive Disorders,Kudzu,root,,
+Digestive Disorders,Lemon Verbena,leaves,,
+Insomnia,Lemon Verbena,leaves,,
+Low Libido,Longjack (Tongkat Ali),root,,
+Fatigue,Longjack (Tongkat Ali),root,,
+Hormonal Imbalances,Maca,root,,
+Low Libido,Maca,root,,
+Anxiety,Magnolia Bark,bark,,
+Stress,Magnolia Bark,bark,,
+Diabetes,Moringa,leaves, seeds, pods
+High Blood Pressure,Moringa,leaves, seeds, pods
+Anxiety,Motherwort,leaves, flowers,
+Menstrual Cramps,Motherwort,leaves, flowers,
+Digestive Disorders,Mugwort,leaves,,
+Menstrual Irregularities,Mugwort,leaves,,
+Skin Infections,Neem,leaves, bark, seeds
+Acne,Neem,leaves, bark, seeds
+Immune Boost,Noni,fruit,,
+Digestive Health,Noni,fruit,,
+Circulation,Periwinkle,leaves, flowers,
+Diabetes,Periwinkle,leaves, flowers,
+Respiratory Infections,Pleurisy Root,root,,
+Cough,Pleurisy Root,root,,
+Lymphatic Support,Poke Root,root,,
+Inflammation,Poke Root,root,,
+Inflammation,Prickly Pear Cactus,fruit, pads, seeds
+Digestive Health,Prickly Pear Cactus,fruit, pads, seeds
+Constipation,Psyllium,seeds, husks,
+Digestive Disorders,Psyllium,seeds, husks,
+Skin Conditions,Sarsaparilla,root,,
+Hormonal Imbalances,Sarsaparilla,root,,
+Fatigue,Siberian Ginseng,root,,
+Immune Boost,Siberian Ginseng,root,,
+Joint Pain,Solomon’s Seal,rhizome,,
+Arthritis,Solomon’s Seal,rhizome,,
+Cancer Support,Soursop,fruit, leaves,
+Inflammation,Soursop,fruit, leaves,
+Dental Health,Spilanthes,flowers, leaves,
+Anti-inflammatory,Spilanthes,flowers, leaves,
+Diabetes,Stevia,leaves,,
+Weight Loss,Stevia,leaves,,
+Malaria,Artemisia annua (Sweet Wormwood),leaves, flowers,
+Inflammation,Artemisia annua (Sweet Wormwood),leaves, flowers,
+Blood Purification,Sweet Clover,leaves, flowers,
+Detoxification,Sweet Clover,leaves, flowers,
+Digestive Disorders,Tansy,leaves, flowers,
+Worm Infections,Tansy,leaves, flowers,
+Skin Infections,Tea Tree,leaves,,
+Acne,Tea Tree,leaves,,
+Low Libido,Tribulus Terrestris,fruit,,
+Muscle Strength,Tribulus Terrestris,fruit,,
+Respiratory Infections,Usnea,lichen,,
+Immune Boost,Usnea,lichen,,
+Pain Relief,White Willow,bark,,
+Fever,White Willow,bark,,
+Cough,Wild Cherry,bark, leaves,
+Sore Throat,Wild Cherry,bark, leaves,
+Menstrual Cramps,Wild Yam,rhizome,,
+Hormonal Imbalances,Wild Yam,rhizome,,
+Stress Relief,Ylang Ylang,flowers,,
+Anxiety,Ylang Ylang,flowers,,
+Antioxidant Support,Acai Berry,fruit,,
+Skin Health,Acai Berry,fruit,,
+Immune Boost,Amla (Indian Gooseberry),fruit,,
+Skin Health,Amla (Indian Gooseberry),fruit,,
+Digestive Disorders,Bael,fruit,,
+Constipation,Bael,fruit,,
+Kidney Health,Bilimbi,fruit,,
+Acid Reflux,Bilimbi,fruit,,
+Asthma,Black Seed (Nigella sativa),seeds,,
+Allergies,Black Seed (Nigella sativa),seeds,,
+Diabetes,Bitter Melon,fruit,,
+Weight Loss,Bitter Melon,fruit,,
+Vitamin C Deficiency,Blood Orange,fruit,,
+Skin Health,Blood Orange,fruit,,
+Digestive Health,Buddha’s Hand,fruit,,
+Mood Enhancement,Buddha’s Hand,fruit,,
+Immune Boost,Calamansi,fruit,,
+Skin Health,Calamansi,fruit,,
+Digestive Health,Capers,flower buds,,
+Antioxidant Support,Capers,flower buds,,
+Digestive Disorders,Carob,pod,,
+Weight Loss,Carob,pod,,
+Digestive Health,Cashew Apple,fruit,,
+Hydration,Cashew Apple,fruit,,
+Arthritis,Cherry,fruit,,
+Inflammation,Cherry,fruit,,
+Cholesterol,Citrus Bergamot,peel, fruit,
+Antioxidant Support,Citrus Bergamot,peel, fruit,
+Immune Boost,Clementine,fruit,,
+Vitamin C Deficiency,Clementine,fruit,,
+Energy Boost,Date Palm,fruit,,
+Digestive Health,Date Palm,fruit,,
+Digestive Disorders,Fig,fruit, leaves,
+Constipation,Fig,fruit, leaves,
+Immune Boost,Goji Berry,fruit,,
+Vision Improvement,Goji Berry,fruit,,
+Weight Loss,Grapefruit,fruit,,
+Detoxification,Grapefruit,fruit,,
+Heart Health,Grape,fruit, seeds,
+Antioxidant Support,Grape,fruit, seeds,
+Digestive Health,Guava,fruit, leaves,
+Vitamin C Deficiency,Guava,fruit, leaves,
+Digestive Disorders,Jackfruit,fruit, seeds,
+Antioxidant Support,Jackfruit,fruit, seeds,
+Insomnia,Jujube,fruit,,
+Digestive Health,Jujube,fruit,,
+Vitamin C Deficiency,Kiwi,fruit,,
+Digestion,Kiwi,fruit,,
+Digestive Health,Kumquat,fruit,,
+Detoxification,Kumquat,fruit,,
+Digestive Health,Lemon,fruit, peel, juice
+Immune Boost,Lemon,fruit, peel, juice
+Digestion,Lime,fruit,,
+Detoxification,Lime,fruit,,
+Antioxidant Support,Lychee,fruit,,
+Hydration,Lychee,fruit,,
+Digestion,Mango,fruit, leaves,
+Skin Health,Mango,fruit, leaves,
+Immune Boost,Mangosteen,fruit,,
+Antioxidant Support,Mangosteen,fruit,,
+Digestive Health,Medlar,fruit,,
+Antioxidant Support,Medlar,fruit,,
+Blood Sugar Control,Mulberry,fruit, leaves, bark
+Cholesterol,Mulberry,fruit, leaves, bark
+Vitamin C Deficiency,Orange,fruit, peel, juice
+Immune Boost,Orange,fruit, peel, juice
+Anxiety,Passionfruit,fruit,,
+Digestion,Passionfruit,fruit,,
+Digestive Health,Pawpaw,fruit,,
+Inflammation,Pawpaw,fruit,,
+Digestive Disorders,Pear,fruit,,
+Hydration,Pear,fruit,,
+Digestive Health,Persimmon,fruit,,
+Antioxidant Support,Persimmon,fruit,,
+Digestive Health,Pineapple,fruit, core,
+Inflammation,Pineapple,fruit, core,
+Heart Health,Pomegranate,fruit, peel, seeds
+Antioxidant Support,Pomegranate,fruit, peel, seeds
+Digestive Disorders,Quince,fruit,,
+Antioxidant Support,Quince,fruit,,
+Immune Boost,Rambutan,fruit,,
+Antioxidant Support,Rambutan,fruit,,
+Digestive Health,Banana,fruit,,
+Energy Boost,Banana,fruit,,
+Digestive Health,Sapodilla,fruit,,
+Antioxidant Support,Sapodilla,fruit,,
+Digestive Disorders,Starfruit (Carambola),fruit,,
+Vitamin C Deficiency,Starfruit (Carambola),fruit,,
+Immune Boost,Strawberry,fruit,,
+Antioxidant Support,Strawberry,fruit,,
+Digestive Health,Tamarind,fruit, pulp,
+Detoxification,Tamarind,fruit, pulp,
+Vitamin C Deficiency,Ugli Fruit,fruit,,
+Immune Boost,Ugli Fruit,fruit,,
+Hydration,Watermelon,fruit, seeds,
+Detoxification,Watermelon,fruit, seeds,
+Antioxidant Support,White Currant,fruit,,
+Skin Health,White Currant,fruit,,
+Digestive Health,Blackberry,fruit,,
+Antioxidant Support,Blackberry,fruit,,
+Immune Boost,Blackcurrant,fruit,,
+Inflammation,Blackcurrant,fruit,,
+Antioxidant Support,Boysenberry,fruit,,
+Immune Boost,Boysenberry,fruit,,
+Cardiovascular Health,Grape Seed Extract,from grape seeds,,
+Antioxidant Support,Grape Seed Extract,from grape seeds,,
+Antioxidant Support,Maqui Berry,fruit,,
+Inflammation,Maqui Berry,fruit,,
+Urinary Tract Health,Lingonberry,fruit,,
+Antioxidant Support,Lingonberry,fruit,,
+Immune Boost,Cloudberry,fruit,,
+Skin Health,Cloudberry,fruit,,
+Digestive Health,Huckleberry,fruit,,
+Antioxidant Support,Huckleberry,fruit,,
+Thyroid Support,Bugleweed,herb,,
+Blood Pressure,Bugleweed,herb,,
+Respiratory Infections,Coltsfoot,leaves,,
+Cough,Coltsfoot,leaves,,
+Wound Healing,Comfrey,leaves, roots,
+Bone Health,Comfrey,leaves, roots,
+Wounds,Plantain,leaves,,
+Skin Rashes,Plantain,leaves,,
+Infections,Goldenseal,root,,
+Digestive Disorders,Goldenseal,root,,
+Energy Boost,Suma (Brazilian Ginseng),root,,
+Immune Boost,Suma (Brazilian Ginseng),root,,
+Sedative,Wild Lettuce,leaves, latex,
+Pain Relief,Wild Lettuce,leaves, latex,
+Respiratory Infections,Anemone (Pulsatilla),herb,,
+Fever,Anemone (Pulsatilla),herb,,
+Skin Conditions,Viper’s Bugloss (Anchusa officinalis),herb,,
+Inflammation,Viper’s Bugloss (Anchusa officinalis),herb,,
+Hormonal Imbalances,Borage,leaves, flowers,
+Skin Health,Borage,leaves, flowers,
+Digestive Health,Summer Savory,leaves,,
+Antimicrobial,Summer Savory,leaves,,
+Pain Relief,Wintergreen,leaves, essential oil,
+Inflammation,Wintergreen,leaves, essential oil,
+Nervous Tension,Spikenard,root,,
+Insomnia,Spikenard,root,,
+Skin Health,Sandalwood,heartwood, essential oil,
+Anxiety,Sandalwood,heartwood, essential oil,
+Digestive Disorders,Barberry,berries, bark,
+Infections,Barberry,berries, bark,
+Immune Boost,Andrographis,leaves, stem,
+Inflammation,Andrographis,leaves, stem,
+Digestive Disorders,Bitter Orange,fruit, peel,
+Weight Loss,Bitter Orange,fruit, peel,
+Headaches,Wood Betony (Stachys officinalis),leaves,,
+Digestive Disorders,Wood Betony (Stachys officinalis),leaves,,
+Menstrual Cramps,Blue Cohosh,root,,
+Labor Induction,Blue Cohosh,root,,
+Parasite Infections,Black Walnut,husk, bark,
+Skin Conditions,Black Walnut,husk, bark,
+Detoxification,Chlorella,algae,,
+Immune Boost,Chlorella,algae,,
+Energy Boost,Spirulina,algae,,
+Immune Support,Spirulina,algae,,
+Immune Boost,Reishi Mushroom,fungus, fruiting body,
+Stress Relief,Reishi Mushroom,fungus, fruiting body,
+Energy Boost,Cordyceps,fungus,,
+Respiratory Health,Cordyceps,fungus,,
+Immune Boost,Shiitake Mushroom,fungus,,
+Heart Health,Shiitake Mushroom,fungus,,
+Immune Boost,Turkey Tail Mushroom,fungus,,
+Digestive Health,Turkey Tail Mushroom,fungus,,
+Immune Boost,Maitake Mushroom,fungus,,
+Blood Sugar Control,Maitake Mushroom,fungus,,
+Cognitive Function,Lion’s Mane Mushroom,fungus,,
+Nerve Health,Lion’s Mane Mushroom,fungus,,
+Immune Boost,Agaricus Blazei,mushroom,,
+Antioxidant Support,Agaricus Blazei,mushroom,,
+Heart Health,Oyster Mushroom,mushroom,,
+Cholesterol,Oyster Mushroom,mushroom,,
+Immune Boost,Chaga Mushroom,fungus,,
+Antioxidant Support,Chaga Mushroom,fungus,,
+Skin Hydration,Tremella,Snow Fungus,,
+Anti-aging,Tremella,Snow Fungus,,
+Digestive Health,Poria Cocos,fungus used in TCM,,
+Immune Boost,Poria Cocos,fungus used in TCM,,
+Respiratory Infections,Devil’s Club,root, bark,
+Immune Boost,Devil’s Club,root, bark,
+Inflammation,Safflower,flowers, seeds,
+Cardiovascular Health,Safflower,flowers, seeds,
+Respiratory Infections,Myrtle,Myrtus communis, leaves, berries
+Digestive Health,Myrtle,Myrtus communis, leaves, berries
