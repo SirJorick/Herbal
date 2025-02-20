@@ -10,7 +10,9 @@ import socket
 import subprocess
 from PIL import Image, ImageTk
 from bs4 import BeautifulSoup
-from deep_translator import GoogleTranslator  # pip install deep-translator
+from deep_translator import GoogleTranslator
+
+
 
 # ---------------- Helper Functions for Context Menu ---------------- #
 def copy_selection(widget):
